@@ -12,7 +12,7 @@ contract Ballot  {
     IInterep public interep;
 
     bytes32 public name;
-    bytes32[] public proposals;
+    mapping(bytes32 => bool) public proposals;
 
     constructor(address _interepAddress, bytes32 _name, bytes32[] memory _proposals) {
         interep = IInterep(_interepAddress);
@@ -20,13 +20,15 @@ contract Ballot  {
         name = _name;
 
         for (uint i = 0; i < _proposals.length; i++) {
-            proposals.push(_proposals[i]);
+            proposals[_proposals[i]] = true;
         }
 
         emit BallotCreated(_name, _proposals);
     }
 
     function vote(bytes32 _proposal, uint256 _nullifierHash, uint256[8] calldata _proof) public {
+        require(proposals[_proposal], "Ballot: proposal does not exit");
+
         interep.verifyProof(GITHUB_GOLD_GROUP_ID, _proposal, _nullifierHash, uint256(name), _proof);
 
         emit VoteAdded(_proposal);
