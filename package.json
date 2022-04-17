@@ -22,7 +22,7 @@
         "@interep/api": "^0.6.0",
         "@interep/identity": "^0.1.1",
         "@metamask/detect-provider": "^1.2.0",
-        "@zk-kit/protocols": "^1.11.0",
+        "@zk-kit/protocols": "^1.11.1",
         "assert": "^2.0.0",
         "framer-motion": "^6",
         "next": "12.0.10",
