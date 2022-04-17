@@ -1,12 +1,12 @@
 import {
     Button,
-    CheckboxGroup,
-    Checkbox,
     Container,
     Divider,
     Heading,
     HStack,
     Image,
+    Radio,
+    RadioGroup,
     Spinner,
     Text,
     Tooltip,
@@ -29,7 +29,8 @@ export default function Home() {
     const { hasCopied, onCopy } = useClipboard(account || "")
     const [signer, setSigner] = useState<Signer>()
     const [ballotName, setBallotName] = useState<string>()
-    const [ballotProposals, setProposals] = useState<string[]>()
+    const [ballotProposals, setBallotProposals] = useState<string[]>()
+    const [ballotProposal, setBallotProposal] = useState<string>()
 
     useEffect(() => {
         ;(async () => {
@@ -65,7 +66,7 @@ export default function Home() {
                 const [name, proposals] = events[0].args as any
 
                 setBallotName(name)
-                setProposals(proposals.map(parseBytes32String))
+                setBallotProposals(proposals.map(parseBytes32String))
             }
         })()
     }, [signer])
@@ -84,13 +85,19 @@ export default function Home() {
     }, [])
 
     const vote = useCallback(async () => {
-        if (signer && ballotName && ballotProposals) {
-            setLogs(["background", "Creating your Semaphore identity..."])
-
+        if (signer && ballotName && ballotProposal) {
             try {
+                setLogs(["white", "Creating your Semaphore identity..."])
+
+                // Semaphore identity (@interep/identity)
+
                 const identity = await createIdentity((message: string) => signer.signMessage(message), "Github")
 
                 const identityCommitment = identity.genIdentityCommitment()
+
+                setLogs(["white", "Creating your Merkle proof..."])
+
+                // Merkle proof (@interep/api, @zk-kit/proof)
 
                 const api = new OffchainAPI("development")
                 const { depth } = await api.getGroup({ provider: "github" as any, name: "gold" })
@@ -98,16 +105,16 @@ export default function Home() {
 
                 const merkleProof = generateMerkleProof(depth, BigInt(0), identityCommitments, identityCommitment)
 
-                setLogs(["background", "Creating your Semaphore proof..."])
+                setLogs(["white", "Creating your Semaphore proof..."])
 
-                const proposal = ballotProposals[0]
+                // Semaphore proof (@zk-kit/protocols)
 
                 const witness = Semaphore.genWitness(
-                    identity.getTrapdoor(),
-                    identity.getNullifier(),
-                    merkleProof,
-                    BigInt(ballotName),
-                    proposal
+                    identity.getTrapdoor(), // Private identity parameter
+                    identity.getNullifier(), // Private identity parameter
+                    merkleProof, // Merkle proof
+                    BigInt(ballotName), // External nullifier
+                    ballotProposal // Voting proposal
                 )
 
                 const { proof, publicSignals } = await Semaphore.genProof(
@@ -117,10 +124,12 @@ export default function Home() {
                 )
                 const solidityProof = Semaphore.packToSolidityProof(proof)
 
+                // Backend API
+
                 const response = await fetch("/api/vote", {
                     method: "POST",
                     body: JSON.stringify({
-                        proposal,
+                        ballotProposal,
                         nullifierHash: publicSignals.nullifierHash,
                         solidityProof: solidityProof
                     })
@@ -137,7 +146,7 @@ export default function Home() {
                 setLogs(["red", error.message])
             }
         }
-    }, [signer, ballotName, ballotProposals])
+    }, [signer, ballotName, ballotProposal])
 
     function shortenAddress(address: string, chars = 4): string {
         address = utils.getAddress(address)
@@ -175,7 +184,7 @@ export default function Home() {
             </Container>
 
             <Container maxW="container.md">
-                <VStack mt="150px" mb="12">
+                <VStack mt="150px" mb="8">
                     <Heading as="h2" size="xl" mb="2">
                         Voting App
                     </Heading>
@@ -196,20 +205,22 @@ export default function Home() {
                         <Spinner thickness="4px" speed="0.65s" size="xl" />
                     </VStack>
                 ) : (
-                    <VStack spacing="6" align="left" mt="12" px="40">
+                    <VStack spacing="6" align="left" mt="8" px="40">
                         <Heading as="h3" size="lg">
                             {parseBytes32String(ballotName)}
                         </Heading>
 
-                        <CheckboxGroup>
-                            {ballotProposals.map((p, i) => (
-                                <Checkbox key={i} value={p}>
-                                    {p}
-                                </Checkbox>
-                            ))}
-                        </CheckboxGroup>
+                        <RadioGroup onChange={setBallotProposal} value={ballotProposal}>
+                            <VStack align="left" pl="5">
+                                {ballotProposals.map((p, i) => (
+                                    <Radio key={i} value={p} colorScheme="primary">
+                                        {p}
+                                    </Radio>
+                                ))}
+                            </VStack>
+                        </RadioGroup>
 
-                        <Button colorScheme="primary" onClick={vote}>
+                        <Button colorScheme="primary" onClick={vote} disabled={!ballotProposal}>
                             Vote
                         </Button>
                     </VStack>
@@ -217,7 +228,7 @@ export default function Home() {
             </Container>
 
             {logs && (
-                <Text mt="20" color={`${logs[0]}.400`} fontSize="lg">
+                <Text mt="20" color={`${logs[0]}.400`} fontSize="xl">
                     {logs[1]}
                 </Text>
             )}

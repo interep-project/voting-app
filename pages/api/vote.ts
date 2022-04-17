@@ -3,7 +3,7 @@ import { Contract, providers, utils } from "ethers"
 import type { NextApiRequest, NextApiResponse } from "next"
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-    const { proposal, nullifierHash, solidityProof } = JSON.parse(req.body)
+    const { ballotProposal, nullifierHash, solidityProof } = JSON.parse(req.body)
 
     const contract = new Contract("0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9", Ballot.abi)
     const provider = new providers.JsonRpcProvider("http://localhost:8545")
@@ -11,7 +11,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const contractOwner = contract.connect(provider.getSigner())
 
     try {
-        await contractOwner.vote(utils.formatBytes32String(proposal), nullifierHash, solidityProof)
+        await contractOwner.vote(utils.formatBytes32String(ballotProposal), nullifierHash, solidityProof)
 
         res.status(200).end()
     } catch (error: any) {
