@@ -108,7 +108,7 @@ yarn start
 Deploy the smart contracts on `voting-app` and `contracts`:
 
 ```bash
-yarn deploy
+yarn deploy --network localhost
 ```
 
 ### 4. Web apps
