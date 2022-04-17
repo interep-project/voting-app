@@ -1,8 +1,8 @@
 <p align="center">
     <h1 align="center">
-        Interep Voting app
+        Interep Voting App
     </h1>
-    <p align="center">Simple voting app to allow only users of gold groups to vote anonymously in a ballot.</p>
+    <p align="center">Simple demo to allow only users of gold groups to vote anonymously in a ballot.</p>
 </p>
 
 <p align="center">
@@ -11,12 +11,6 @@
     </a>
     <a href="https://github.com/interep-project/voting-app/blob/main/LICENSE">
         <img alt="Github license" src="https://img.shields.io/github/license/interep-project/voting-app.svg?style=flat-square">
-    </a>
-    <a href="https://github.com/interep-project/voting-app/actions?query=workflow%3Atest">
-        <img alt="GitHub Workflow test" src="https://img.shields.io/github/workflow/status/interep-project/voting-app/test?label=test&style=flat-square&logo=github">
-    </a>
-    <a href="https://coveralls.io/github/interep-project/voting-app">
-        <img alt="Coveralls" src="https://img.shields.io/coveralls/github/interep-project/voting-app?style=flat-square&logo=coveralls">
     </a>
     <a href="https://eslint.org/" target="_blank">
         <img alt="Linter eslint" src="https://img.shields.io/badge/linter-eslint-8080f2?style=flat-square&logo=eslint">
@@ -43,99 +37,84 @@
     </h4>
 </div>
 
+
+| Interep is made of several components. The purpose of this demo is to show how to start integrating contracts and libraries, and how these components interact. This demo consists of a frontend, where users can create their own zero-knowledge proof for anonymous voting, and a backend, where an admin receives the anonymous proofs and sends transactions for onchain voting. |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+
 ---
 
-## Install
+## Components
 
-Clone this repository and install the dependencies:
-
-```bash
-git clone https://github.com/interep-project/voting-app.git
-cd voting-app
-yarn # or `npm i`
+```mermaid
+flowchart TD
+    subgraph in [Interep]
+    inwa([Web App]) --- insid
+    insid[/Semaphore ID/] --->|allows users \nto join groups| rs
+    rs{{"Back-end\n(reputation Service)"}} --->|stores Merkle trees| db[(MongoDB)]
+    rs -->|saves Merkle roots \nevery N minutes| ic{{Interep Contract}}
+    ic --- isc{{Semaphore Contracts}}
+    rs --- api{API}
+    end
+    subgraph cl [Client]
+    cwa([Web App]) --- csid
+    api -->|provides group data| cwa
+    csid[/Semaphore ID/] --->|allows users \nto generate zk-proofs| cbe{{Back-end}}
+    cbe -->|sends transaction| cc{{Client Contract}}
+    cc -->|verifies zk-proofs| ic
+    end
 ```
+
+\* *Groups are Merkle trees*\
+\* *Group members are Merkle tree leaves*\
+\* *Merkle tree leaves are Semaphore IDs*\
+\* *Semaphore ids are used to join groups and generate zk proofs*
 
 ## Usage
 
-Copy the `.env.example` file and rename it `.env`.
+### 1. Setup
 
-### Compile
+#### 1.1 Voting App
 
-Compile the smart contracts with Hardhat:
+Clone this repository and install its dependencies:
+
+```bash
+git clone https://github.com/interep-project/voting-app.git && cd voting-app && yarn
+```
+
+#### 1.2 Interep Contracts & Reputation Service
+
+Clone the [`contracts`](https://github.com/interep-project/contracts) and [`reputation-service`](https://github.com/interep-project/reputation-service) repositories and install their dependencies.
+
+### 2. Compile
+
+Compile the smart contracts  on `voting-app` and `contracts`:
 
 ```bash
 yarn compile
 ```
 
-### Lint
+### 3. Deploy
 
-Lint the Solidity or the TypeScript code:
+#### 3.1 Local network
 
-```bash
-yarn lint:sol
-yarn lint:ts
-# or yarn lint to lint both.
-```
-
-And check if the code is well formatted:
-
-```bash
-yarn prettier
-```
-
-### Test
-
-Run the Mocha tests:
-
-```bash
-yarn test
-```
-
-### Coverage
-
-Generate the code coverage report:
-
-```bash
-yarn test:coverage
-```
-
-### Report Gas
-
-See the gas usage per unit test and average gas per method call:
-
-```bash
-yarn test:report-gas
-```
-
-### Deploy
-
-Deploy the Ballot contract with a valid Interep address:
-
-```bash
-yarn deploy --interep-address <interep-address> --name <name> --proposals <proposals>
-```
-
-If you want to deploy contracts in a specific network you can set up the `DEFAULT_NETWORK` variable in your `.env` file with the name of one of our supported networks (hardhat, localhost, ropsten, kovan, arbitrum). Or you can specify it as option:
-
-```bash
-yarn deploy --interep-address <interep-address> --name <name> --proposals <proposals> --network kovan
-yarn deploy --interep-address <interep-address> --name <name> --proposals <proposals> --network localhost
-```
-
-If you want to deploy the contracts on Ropsten, Kovan or Arbitrum remember to provide a valid private key and an Infura API in your `.env` file.
-
-### Preparing a local network
-
-Run a Hardhat Network in a stand-alone fashion:
+Start an Hardhat network on `contracts`:
 
 ```bash
 yarn start
 ```
 
-Deploy the Ballot contract:
+#### 3.2 Deploy contracts
+
+Deploy the smart contracts on `voting-app` and `contracts`:
 
 ```bash
-yarn deploy --interep-address <interep-address> --name <name> --proposals <proposals> --network localhost
+yarn deploy
 ```
 
-You can omit `--network localhost` if your `DEFAULT_NETWORK` env variable is equal to `localhost`.
+### 4. Web apps
+
+Start the web apps on `voting-app` and `reputation-service`:
+
+```bash
+yarn dev
+```
