@@ -160,7 +160,7 @@ export default function Home() {
                 <title>Voting App</title>
                 <meta
                     name="description"
-                    content="A simple voting app to allow only users of gold groups to vote anonymously in a poll."
+                    content="A simple demo to allow only users of gold groups to vote anonymously in a ballot."
                 />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
@@ -190,7 +190,7 @@ export default function Home() {
                     </Heading>
 
                     <Text color="background.400" fontSize="md">
-                        A simple voting app to allow only users of gold groups to vote anonymously in a poll.
+                        A simple demo to allow only users of gold groups to vote anonymously in a ballot.
                     </Text>
                 </VStack>
 
