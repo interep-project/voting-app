@@ -2,7 +2,7 @@ import { Contract } from "ethers"
 import { formatBytes32String } from "ethers/lib/utils"
 import { task, types } from "hardhat/config"
 
-task("deploy", "Deploy a Ballot contract")
+task("deploy:ballot", "Deploy a Ballot contract")
     .addOptionalParam<boolean>("logs", "Print the logs", true, types.boolean)
     .addParam("interepAddress", "Interep contract address", undefined, types.string)
     .addParam("name", "Name of the ballot", undefined, types.string)

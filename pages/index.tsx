@@ -140,7 +140,7 @@ export default function Home() {
 
                     setLogs(["red", errorMessage])
                 } else {
-                    setLogs(["green", "Your anonymous vote is onchain :)"])
+                    setLogs(["green", "You just voted anonymously"])
                 }
             } catch (error: any) {
                 setLogs(["red", error.message])
