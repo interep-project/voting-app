@@ -2,7 +2,7 @@
     <h1 align="center">
         Interep Voting app
     </h1>
-    <p align="center">Simple voting app to allow only users of gold groups to vote anonymously in a poll.</p>
+    <p align="center">Simple voting app to allow only users of gold groups to vote anonymously in a ballot.</p>
 </p>
 
 <p align="center">

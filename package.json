@@ -1,7 +1,7 @@
 {
     "name": "interep-voting-app",
     "version": "1.0.0",
-    "description": "A simple voting app to allow only users of gold groups to vote anonymously in a poll.",
+    "description": "A simple voting app to allow only users of gold groups to vote anonymously in a ballot.",
     "license": "MIT",
     "private": true,
     "scripts": {
