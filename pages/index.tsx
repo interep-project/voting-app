@@ -97,7 +97,7 @@ export default function Home() {
 
                 setLogs(["white", "Creating your Merkle proof..."])
 
-                // Merkle proof (@interep/api, @zk-kit/proof)
+                // Merkle proof (@interep/api, @zk-kit/protocols)
 
                 const api = new OffchainAPI("development")
                 const { depth } = await api.getGroup({ provider: "github" as any, name: "gold" })
