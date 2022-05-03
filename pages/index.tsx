@@ -13,10 +13,9 @@ import {
     useClipboard,
     VStack
 } from "@chakra-ui/react"
-import { OffchainAPI } from "@interep/api"
 import createIdentity from "@interep/identity"
+import createProof from "@interep/proof"
 import detectEthereumProvider from "@metamask/detect-provider"
-import { generateMerkleProof, Semaphore } from "@zk-kit/protocols"
 import Ballot from "artifacts/contracts/Ballot.sol/Ballot.json"
 import { Contract, providers, Signer, utils } from "ethers"
 import { getAddress, parseBytes32String } from "ethers/lib/utils"
@@ -58,7 +57,7 @@ export default function Home() {
     useEffect(() => {
         ;(async () => {
             if (signer) {
-                const contract = new Contract("0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9", Ballot.abi, signer)
+                const contract = new Contract("0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0", Ballot.abi, signer)
 
                 const filter = contract.filters["BallotCreated"]()
                 const events = await contract.queryFilter(filter)
@@ -90,39 +89,19 @@ export default function Home() {
                 setLogs(["white", "Creating your Semaphore identity..."])
 
                 // Semaphore identity (@interep/identity)
-
                 const identity = await createIdentity((message: string) => signer.signMessage(message), "Github")
-
-                const identityCommitment = identity.genIdentityCommitment()
-
-                setLogs(["white", "Creating your Merkle proof..."])
-
-                // Merkle proof (@interep/api, @zk-kit/protocols)
-
-                const api = new OffchainAPI("development")
-                const { depth } = await api.getGroup({ provider: "github" as any, name: "gold" })
-                const identityCommitments = await api.getGroupMembers({ provider: "github" as any, name: "gold" })
-
-                const merkleProof = generateMerkleProof(depth, BigInt(0), identityCommitments, identityCommitment)
 
                 setLogs(["white", "Creating your Semaphore proof..."])
 
-                // Semaphore proof (@zk-kit/protocols)
-
-                const witness = Semaphore.genWitness(
-                    identity.getTrapdoor(), // Private identity parameter
-                    identity.getNullifier(), // Private identity parameter
-                    merkleProof, // Merkle proof
-                    BigInt(ballotName), // External nullifier
-                    ballotProposal // Voting proposal
+                // Semaphore proof (@interep/proof)
+                const { publicSignals, solidityProof } = await createProof(
+                    identity,
+                    { provider: "github", name: "gold" },
+                    BigInt(ballotName),
+                    ballotProposal,
+                    { wasmFilePath: "./semaphore.wasm", zkeyFilePath: "./semaphore_final.zkey" },
+                    "local"
                 )
-
-                const { proof, publicSignals } = await Semaphore.genProof(
-                    witness,
-                    "./semaphore.wasm",
-                    "./semaphore_final.zkey"
-                )
-                const solidityProof = Semaphore.packToSolidityProof(proof)
 
                 // Backend API
 

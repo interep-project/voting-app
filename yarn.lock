@@ -1335,18 +1335,18 @@
     fastfile "0.0.19"
     ffjavascript "^0.2.48"
 
-"@interep/api@^0.6.0":
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/@interep/api/-/api-0.6.0.tgz#396494ed949df17d44f2faebd509fcdc4212c819"
-  integrity sha512-BgCGVbJ3hx3c7OO/BZQyVAoLexffVFj0MTaOpwlXLA6ft8kkydtwkGHbMdjuXyPPGRkB5upaSD2wSCGd+H3t0w==
+"@interep/api@^0.7.0":
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/@interep/api/-/api-0.7.0.tgz#0c0eb1ce15bb552cc2082afd0db7754f4098619c"
+  integrity sha512-XsH8H6mm/awDXfo9yoUXDYkBvLSs5tl0NRaj3SpJ9NXTMrefhaUZ37yrBAntX1P38UPT1Yuo38ampQShwTGg6Q==
   dependencies:
     "@interep/reputation" "^0.1.0"
     axios "^0.23.0"
 
-"@interep/contracts@^0.5.0":
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/@interep/contracts/-/contracts-0.5.0.tgz#a0924c570b9079f09afbab595c117de921ecb501"
-  integrity sha512-/F0Ye64EuRLcOvzV3FgFxwX24MrhzLYOV2i+Oetl2stFhW0bPrJLUi3EyEln8ewO+xvvU7OdbMxrUCLlRzq9hQ==
+"@interep/contracts@^0.6.0":
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/@interep/contracts/-/contracts-0.6.0.tgz#b9ce2077734e89843a2e350af9553c7b0db98d28"
+  integrity sha512-Tot6yy6dHCJJsM+2b7sBMN03TEu1sPW2Qzymu2ItbDXh3MmrbUaWblwZ+U5x/UE3ZpeSfP+ZFzGO1d1b35kJug==
   dependencies:
     "@appliedzkp/semaphore-contracts" "^0.8.0"
     "@openzeppelin/contracts" "^4.5.0"
@@ -1357,6 +1357,19 @@
   integrity sha512-UVW9B+zBqvPaQB8euEtXlk0g2U3BGYeLLRcLwEuTm0wLb6IT5WjX2PYK4HuuEBQ31O5BVGwLaWec71K0bER3Nw==
   dependencies:
     "@zk-kit/identity" "^1.4.1"
+
+"@interep/proof@^0.5.0":
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/@interep/proof/-/proof-0.5.0.tgz#0105765e59d37fa5a79da8227ade335d03de7205"
+  integrity sha512-Z+r2VIx5uUKwmq8tLamzg6/Np0tQcuW0qtA64mjBMkAIn12BpmiFJOdIX3+tvi5Y2lqi/Mwq4GscvcMSD+NVzA==
+  dependencies:
+    "@ethersproject/solidity" "^5.5.0"
+    "@ethersproject/strings" "^5.5.0"
+    "@interep/api" "^0.7.0"
+    "@zk-kit/identity" "^1.4.1"
+    "@zk-kit/incremental-merkle-tree" "^0.4.3"
+    "@zk-kit/protocols" "^1.11.0"
+    circomlibjs "0.0.8"
 
 "@interep/reputation@^0.1.0":
   version "0.1.0"
@@ -1924,7 +1937,7 @@
   resolved "https://registry.yarnpkg.com/@zk-kit/incremental-merkle-tree/-/incremental-merkle-tree-0.4.3.tgz#197f72102d35dd9c546a6a432896d6d6f6de05f4"
   integrity sha512-2qHfrJXtPx8/UmF0wFAUr4VqCLr3J/P859fk/e3fwKLUnf3baeIUAO6inY4wrh0NGy4bzpKUWYjDph0yTbPz6A==
 
-"@zk-kit/protocols@^1.11.1":
+"@zk-kit/protocols@^1.11.0":
   version "1.11.1"
   resolved "https://registry.yarnpkg.com/@zk-kit/protocols/-/protocols-1.11.1.tgz#e70942097e6bd6759afd72c6b22c358ae1588d86"
   integrity sha512-fjjrYwZCcbKMJb3+xVdLwV6kUpRMTI9PVdC6M1zHfqEqcDebmfGmMjduoL/oFwq3wZTBNV1zQvRc96WZ0Nvrnw==

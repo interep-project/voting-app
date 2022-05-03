@@ -5,7 +5,7 @@ import type { NextApiRequest, NextApiResponse } from "next"
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const { ballotProposal, nullifierHash, solidityProof } = JSON.parse(req.body)
 
-    const contract = new Contract("0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9", Ballot.abi)
+    const contract = new Contract("0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0", Ballot.abi)
     const provider = new providers.JsonRpcProvider("http://localhost:8545")
 
     const contractOwner = contract.connect(provider.getSigner())
