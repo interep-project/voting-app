@@ -49,25 +49,25 @@
 flowchart TD
     subgraph in [Interep]
     inwa([Web App]) --- insid
-    insid[/Semaphore ID/] --->|allows users \nto join groups| rs
-    rs{{"Back-end\n(reputation Service)"}} --->|stores Merkle trees| db[(MongoDB)]
-    rs -->|saves Merkle roots \nevery N minutes| ic{{Interep Contract}}
+    insid[/Semaphore ID/] --->|Allows users \nto join groups| rs
+    rs{{"Back-end\n(Reputation Service)"}} --->|Stores Merkle trees| db[(MongoDB)]
+    rs -->|Saves Merkle roots \nevery N minutes| ic{{Interep Contract}}
     ic --- isc{{Semaphore Contracts}}
     rs --- api{API}
     end
     subgraph cl [Client]
     cwa([Web App]) --- csid
-    api -->|provides group data| cwa
-    csid[/Semaphore ID/] --->|allows users \nto generate zk-proofs| cbe{{Back-end}}
-    cbe -->|sends transaction| cc{{Client Contract}}
-    cc -->|verifies zk-proofs| ic
+    api -->|Provides group data| cwa
+    csid[/Semaphore ID/] --->|Allows users \nto generate zk-proofs| cbe{{Back-end}}
+    cbe -->|Sends transaction| cc{{Client Contract}}
+    cc -->|Verifies zk-proofs| ic
     end
 ```
 
 \* *Groups are Merkle trees*\
 \* *Group members are Merkle tree leaves*\
 \* *Merkle tree leaves are Semaphore IDs*\
-\* *Semaphore ids are used to join groups and generate zk proofs*
+\* *Semaphore IDs are used to join groups and generate ZK proofs*
 
 ## Usage
 
