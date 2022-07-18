@@ -96,10 +96,11 @@ export default function Home() {
                 // Semaphore proof (@interep/proof)
                 const { publicSignals, solidityProof } = await createProof(
                     identity,
-                    { provider: "github", name: "gold" },
+                    "github",
+                    "gold",
                     BigInt(ballotName),
                     ballotProposal,
-                    { wasmFilePath: "./semaphore.wasm", zkeyFilePath: "./semaphore_final.zkey" },
+                    { wasmFilePath: "./semaphore.wasm", zkeyFilePath: "./semaphore.zkey" },
                     "local"
                 )
 
